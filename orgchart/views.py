@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.views.generic import ListView
-from .models import Org
+from .models import Org, Chart
 
 class OrgList(ListView):
+    model = Org
+    template_name = 'orgchart/org_list.html'
+
+class ChartList(ListView):
     model = Org
     template_name = 'orgchart/org_list.html'
 
