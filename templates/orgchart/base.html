@@ -9,7 +9,11 @@
   <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" charset="utf-8">
 </head>
 <body>
+  <ul>
+    <li><a href="{% url 'horizontal_tree' object.slug %}">View as horizontal tree</a></li>
+    <li><a href="{% url 'radial_tree' object.slug %}">View as radial tree</a></li>
+    <li><a href="#">View as bubble chart</a></li>
+  </ul>
   {% block content %}{% endblock %}
 </body>
 </html>
-
