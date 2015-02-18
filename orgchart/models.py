@@ -3,17 +3,13 @@ from django.db import models
 # Create your models here.
 
 class Org(models.Model):
-    name = models.CharField(max_length=20, help_text = 'Name of organization')  
+    slug = models.SlugField(max_length=32, unique=True, help_text = 'Name of organization')  
     title = models.CharField(max_length=40, help_text = 'Title to display on chart')  
     root_email = models.EmailField(max_length=100)
-    data_filename = models.FileField()
+    #json_url = models.URLField()
+    json_file = models.FileField(upload_to = "json/%Y/%m/%d", default = "json/bad.json")
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True, auto_now_add=True)
 
     def __str__(self):
-        return self.name + ': ' + self.root_email
-        
-class Chart(models.Model):
-    name = models.CharField(max_length=20, help_text = 'Name of chart type')
-    javascript = models.CharField(max_length=10000, help_text = 'javascript to render chart')
-    def __str__(self):
-        return self.name
-    
+        return '%s, %s' % (self.slug, self.root_email)

@@ -1,13 +1,9 @@
 from django.contrib import admin
-from .models import Org, Chart
+from .models import Org
 
 class OrgAdmin(admin.ModelAdmin):
     # ...
-    list_display = ('name', 'title', 'root_email', 'data_filename')
+    list_display = ('slug', 'title', 'root_email')
 
-class ChartAdmin(admin.ModelAdmin):
-    # ...
-    list_display = ['name']
-    
-admin.site.register(Org, OrgAdmin)
-admin.site.register(Chart, ChartAdmin)
+
+admin.site.register(Org)
