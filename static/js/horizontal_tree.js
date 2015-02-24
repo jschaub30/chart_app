@@ -18,24 +18,64 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+var legend = svg.append('g');
+
+legend.append('rect')
+  .attr('rx', 10)
+  .attr('rx', 10)
+  .attr('x', -80)
+  .attr('y', 0)
+  .attr('height', 50)
+  .attr('width', 170)
+  .style('fill', '#A2B5D7');
+legend.append('text')
+  .text('Left click to toggle 1 level')
+  .attr('x', -75)
+  .attr('y', 20)
+  .style('font-size','12px');
+legend.append('text')
+  .text('Right click to toggle all levels')
+  .attr('x', -75)
+  .attr('y', 40)
+  .style('font-size','12px');
+
+var tooltip = d3.select("#chart")
+  .append("div")
+    .style("position", "absolute")
+    .style("font-family", "Helvetica")
+    .style("z-index", "10")
+    .style("background-color", "#FFFFFF")
+    .style("visibility", "hidden")
+    .text("a simple tooltip");
+
 d3.json(json_file, function(error, flare) {
   root = flare;
   root.x0 = height / 2;
   root.y0 = 0;
 
-  function collapse(d) {
-    if (d.children) {
-      d._children = d.children;
-      d._children.forEach(collapse);
-      d.children = null;
-    }
-  }
 
   root.children.forEach(collapse);
+  //root.children.forEach(expand);
   update(root);
 });
 
 d3.select(self.frameElement).style("height", "800px");
+
+function collapse(d) {
+  if (d.children) {
+    d._children = d.children;
+    d._children.forEach(collapse);
+    d.children = null;
+  }
+}
+
+function expand(d) {
+  if (d._children) {
+    d.children = d._children;
+    d.children.forEach(expand);
+    d._children = null;
+  }
+}
 
 function update(source) {
 
@@ -50,11 +90,27 @@ function update(source) {
   var node = svg.selectAll("g.node")
       .data(nodes, function(d) { return d.id || (d.id = ++i); });
 
+
+      
   // Enter any new nodes at the parent's previous position.
   var nodeEnter = node.enter().append("g")
       .attr("class", "node")
       .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-      .on("click", click);
+      .on("click", click)
+      .on("contextmenu", function(d, index) {
+           //handle right click
+
+           //stop showing browser menu
+           d3.event.preventDefault();
+           console.log(d);
+           if (d._children) {
+             expand(d);
+           } else {
+             collapse(d);
+           }
+
+           update(root);
+      });
 
   nodeEnter.append("circle")
       .attr("r", 1e-6)
@@ -64,9 +120,26 @@ function update(source) {
       .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
       .attr("dy", ".35em")
       .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
-      .text(function(d) { return d.full_name; })
+      .text(function(d) { return d.name; })
       .style("fill-opacity", 1e-6);
 
+  nodeEnter.on("mouseover", function(d) {
+    tooltip.style("visibility", "visible");
+    tooltip.style("top", (d3.event.pageY-20)+"px").style("left",(d3.event.layerX + 20)+"px");
+    tooltip.style("padding", "12px")
+    tooltip.style("background", "#e3e3e3")
+    html_str = d["name"] + '<br />';
+
+    if (d["is_manager"]){
+      html_str = html_str + d["full_count"] + '(full-time) and ' + d["supp_count"] + ' (supplemental) reports<br />';
+
+    }
+    html_str = html_str + d["location"];
+    tooltip.html(html_str);
+  })
+  .on("mouseout", function(d) {
+    tooltip.style("visibility", "hidden");
+  });
   // Transition nodes to their new position.
   var nodeUpdate = node.transition()
       .duration(duration)
@@ -93,6 +166,7 @@ function update(source) {
 
   nodeUpdate.select("text")
       .style("fill-opacity", 1);
+
 
   // Transition exiting nodes to the parent's new position.
   var nodeExit = node.exit().transition()

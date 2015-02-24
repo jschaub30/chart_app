@@ -1,8 +1,15 @@
+
 {% extends 'orgchart/base.html' %}
 {% block content %}
 
-
 <div id="orgchart_header"> <h1>{{ object.title }}<h1></div>
+
+  <ul>
+    <li><a href="{% url 'horizontal_tree' object.slug %}">View as horizontal tree</a></li>
+    <li><a href="{% url 'radial_tree' object.slug %}">View as radial tree</a></li>
+    <li><a href="#">View as bubble chart</a></li>
+  </ul>
+
 
 <div id='chart'>
 </div>
