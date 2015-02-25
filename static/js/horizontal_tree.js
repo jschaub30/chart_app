@@ -20,6 +20,8 @@ var svg = d3.select("body").append("svg")
 
 var legend = svg.append('g');
 
+var lookup_email = 'schaubj@us.ibm.com';
+
 legend.append('rect')
   .attr('rx', 10)
   .attr('rx', 10)
@@ -54,8 +56,12 @@ d3.json(json_file, function(error, flare) {
   root.y0 = 0;
 
 
-  root.children.forEach(collapse);
+  if (lookup_email){
+    console.log(lookup_email);
+  } else {
+    root.children.forEach(collapse);
   //root.children.forEach(expand);
+  }
   update(root);
 });
 
