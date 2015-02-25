@@ -7,7 +7,8 @@
     <div class="col-md-6">
       <ul class="list-group">
         {% for org in object_list %}
-        <li class="list-group-item">{{ org }} </li>
+        <li class="list-group-item">
+          <a href="{% url 'horizontal_tree' org.slug %}">{{ org }}</a></li>
         {% endfor %}
       </ul>
     </div>

@@ -17,10 +17,6 @@
 h1 {
 }
 
-body {
-    font-family: "Helvetica";
-}
-
 html {
     min-width: 1040px;
 }
@@ -31,8 +27,10 @@ body {
     position: relative;
     tab-size: 2;
     width: 1600px;
+    min-height: 2000px;
+    padding-top: 0px;
 }
-
+  
 h1 {
     font-size: 64px;
     font-weight: 300;
@@ -151,4 +149,37 @@ iframe {
 
 .full-time {
     text-color: #0000FF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background: #e3e3e3;
+}
+nav ul {
+    list-style: none;
+    padding: 1em 0;
+}
+
+nav li {
+    display: inline;
+    padding: 0 1.5em;
+}
+
+nav ul li a {
+  color: #000000;
+  text-decoration: none;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 100;
+  text-transform: uppercase;
+  font-size: 14px;
+  position: relative;
+}
+
+li.title  a {
+  font-size: 20px;
+  font-weight: 500;    
 }

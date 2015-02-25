@@ -21,6 +21,15 @@ var svg = d3.select("body").append("svg")
     .append("g")
     .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 
+var tooltip = d3.select("#chart")
+  .append("div")
+    .style("position", "absolute")
+    .style("font-family", "Helvetica")
+    .style("z-index", "10")
+    .style("background-color", "#FFFFFF")
+    .style("visibility", "hidden")
+    .text("a simple tooltip");
+
 d3.json(json_file, function(error, flare) {
   root = flare; 
   root.x0 = height / 2;
@@ -29,7 +38,6 @@ d3.json(json_file, function(error, flare) {
   root.children.forEach(collapse);  // start with all children collapsed
   update(root);
 });
-
 
 d3.select(self.frameElement).style("height", "800px");
 
@@ -50,7 +58,21 @@ function update(source) {
   var nodeEnter = node.enter().append("g")
       .attr("class", "node")
       //.attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
-      .on("click", click);
+      .on("click", click)
+      .on("contextmenu", function(d, index) {
+           //handle right click
+
+           //stop showing browser menu
+           d3.event.preventDefault();
+           // console.log(d);
+           if (d._children) {
+             expand(d);
+           } else {
+             collapse(d);
+           }
+
+           update(root);
+      });
 
    nodeEnter.append("circle")
        .attr("r", 1e-6)
@@ -59,8 +81,27 @@ function update(source) {
   nodeEnter.append("text")
           .attr("dy", ".31em")
           .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
-          .text(function(d) { return d.first_name + ' ' + d.last_name; })
+          .text(function(d) { return d.name; })
           .style("fill-opacity", 1e-6);
+
+          nodeEnter.on("mouseover", function(d) {
+            tooltip.style("visibility", "visible");
+            tooltip.style("top", (d3.event.pageY-20)+"px").style("left",(d3.event.layerX + 20)+"px");
+            tooltip.style("padding", "12px")
+            tooltip.style("background", "#e3e3e3")
+            html_str = d["name"] + '<br />';
+            html_str += d["job_responsibility"] + '<br />';
+
+            if (d["is_manager"]){
+              html_str = html_str + d["full_count"] + '(full-time) and ' + d["supp_count"] + ' (supplemental) reports<br />';
+
+            }
+            html_str = html_str + d["location"];
+            tooltip.html(html_str);
+          })
+          .on("mouseout", function(d) {
+            tooltip.style("visibility", "hidden");
+          });
 
   // Transition nodes to their new position.
   var nodeUpdate = node.transition()
@@ -130,12 +171,7 @@ function update(source) {
       })
       .remove();
 
-    // nodeUpdate.select("text")
- //      .style("fill-opacity", 1)
- //      //.attr("transform", function(d) { return d.x < 180 ? "translate(0)" : "rotate(180)translate(-" + String(d.first_name.length + d.last_name.length + 0) + ")"; });
- //      .attr("transform", function(d) {
- //        console.log(d);
- //        return d.x < 180 ? "translate(0)" : "rotate(180)translate(0)"; });
+
 
   // Stash the old positions for transition.
   nodes.forEach(function(d) {
@@ -159,19 +195,6 @@ function click(d) {
   rotate(d)
 }
 
-function rotate(source) {
-
-  // var node = svg.selectAll("g.node")
- //  var nodeUpdate = node.transition()
- //  .duration(duration);
- //      //.attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
- //
- //    nodeUpdate.select("text")
- //      .style("fill-opacity", 1)
- //      //.attr("transform", function(d) { return d.x < 180 ? "translate(0)" : "rotate(180)translate(-" + String(d.first_name.length + d.last_name.length + 0) + ")"; });
- //      .attr("transform", function(d) { return d.x < 180 ? "translate(0)" : "rotate(180)translate(0)"; });
-}
-
 // Collapse nodes
 function collapse(d) {
   if (d.children) {
@@ -179,4 +202,12 @@ function collapse(d) {
       d._children.forEach(collapse);
       d.children = null;
     }
+}
+
+function expand(d) {
+  if (d._children) {
+    d.children = d._children;
+    d.children.forEach(expand);
+    d._children = null;
+  }
 }

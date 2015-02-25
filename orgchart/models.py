@@ -12,4 +12,4 @@ class Org(models.Model):
     date_updated = models.DateTimeField(null=True, auto_now=True, auto_now_add=True)
 
     def __str__(self):
-        return '%s, %s' % (self.slug, self.root_email)
+        return '%s' % (self.title)
