@@ -20,8 +20,6 @@ var svg = d3.select("body").append("svg")
 
 var legend = svg.append('g');
 
-var lookup_email = 'schaubj@us.ibm.com';
-
 legend.append('rect')
   .attr('rx', 10)
   .attr('rx', 10)
@@ -56,8 +54,8 @@ d3.json(json_file, function(error, flare) {
   root.y0 = 0;
 
 
-  if (lookup_email){
-    console.log(lookup_email);
+  if (typeof lookup_email !== 'undefined'){
+    console.log(lookup_email);  // Don't collapse root
   } else {
     root.children.forEach(collapse);
   //root.children.forEach(expand);
@@ -154,6 +152,12 @@ function update(source) {
 
   nodeUpdate.select("circle")
       .attr("r", function(d){
+        // Apply special formatting to person being looked up
+        if (typeof lookup_email !== 'undefined'){
+          if (d['email'].toLowerCase()==lookup_email.toLowerCase()){
+            return 15;
+          }
+        }
         if(d["is_manager"]){
           return 2*Math.log(1 + Number(d["full_count"]+d["supp_count"])) + 4.5;
         } else{
@@ -162,6 +166,12 @@ function update(source) {
       })
       //.style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
       .style("fill", function(d){
+        // Apply special formatting to person being looked up
+        if (typeof lookup_email !== 'undefined'){
+          if (d['email'].toLowerCase()==lookup_email.toLowerCase()){
+            return "#FEE529"
+          }
+        }
         if (d["is_full_time"]){
           return "#466BB0" // IBM Blue
         }

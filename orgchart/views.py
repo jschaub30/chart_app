@@ -20,7 +20,7 @@ class OrgChart(DetailView):
         context = super(OrgChart, self).get_context_data(**kwargs)
         try:
             email = self.kwargs['email']
-            print email
+            context['lookup_email'] = email
         except:
             pass
         return context
@@ -34,8 +34,6 @@ class BubbleChart(DetailView):
     template_name = 'orgchart/bubble.html'
 
 def lookup_email(request, email):
-    # View code here...
-    print email
     if 'org_lookup' not in globals().keys():
         global org_lookup
         org_lookup = lookup_org()
