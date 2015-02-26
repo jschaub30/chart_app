@@ -4,47 +4,43 @@
 {% block header %}
 <!-- Fixed navbar -->
 <nav>
-<ul>
-  <li class="title"><a href="{% url 'home' %}">All organizations</a></li>
-  <li><a href="{% url 'horizontal_tree' object.slug %}">horizontal tree</a></li>
-  <li><a href="{% url 'radial_tree' object.slug %}">Radial tree</a></li>
-  <li><a href="{% url 'bubble' object.slug %}">Bubble chart</a></li>
-</ul>
+  <ul>
+    <li class="title"><a href="{% url 'home' %}">All organizations</a></li>
+    <li><a href="{% url 'horizontal_tree' object.slug %}">horizontal tree</a></li>
+    <li><a href="{% url 'radial_tree' object.slug %}">Radial tree</a></li>
+    <li><a href="{% url 'bubble' object.slug %}">Bubble chart</a></li>
+  </ul>
 </nav>
 {% endblock %}
 
 {% block content %}
 
-<div id="orgchart_header"> <h1>{{ object.title }}<h1></div>
+<div id="orgchart_header"> <h1>{{ object.title }}</h1></div>
 
-            <li class="active"><a href="{% url 'horizontal_tree' object.slug %}">View as horizontal tree</a></li>
-            <li><a href="{% url 'radial_tree' object.slug %}">View as radial tree</a></li>
-            <li><a href="#">View as bubble chart</a></li>
-  <div id='chart'>
-  </div>
-
-  <script type="text/javascript">
-  var json_file = "{{ object.json_file.url }}"
-  </script>
-
-  <script src='/static/js/horizontal_tree.js' type='text/javascript'></script>
-
-  <p> Details on how I created this chart <a href="http://arlab093.austin.ibm.com/blog/?cat=122">here</a>.</p>
-
-  <h3 id='source_code'>d3.js Source Code</h3>
-
-  <pre class='prettyprint linenums'>
-  </pre>
-  <script type="text/javascript">
-  var lookup_email = "{{ lookup_email }}";
-  </script>
-  <script type='text/javascript'>
-  // This just prints the text in orgchart.js to the screen
-  d3.text("/static/js/horizontal_tree.js","text/plain",function(err,text) {
-    d3.select("pre.prettyprint").text(text);
-  });
-  </script>
+<div id='chart'>
 </div>
+
+<script type="text/javascript">
+var json_file = "{{ object.json_file.url }}"
+</script>
+
+<script src='/static/js/horizontal_tree.js' type='text/javascript'></script>
+
+<p> Details on how I created this chart <a href="http://arlab093.austin.ibm.com/blog/?cat=122">here</a>.</p>
+
+<h3 id='source_code'>d3.js Source Code</h3>
+
+<pre class='prettyprint linenums'>
+</pre>
+<script type="text/javascript">
+var lookup_email = "{{ lookup_email }}";
+</script>
+<script type='text/javascript'>
+// This just prints the text in orgchart.js to the screen
+d3.text("/static/js/horizontal_tree.js","text/plain",function(err,text) {
+  d3.select("pre.prettyprint").text(text);
+});
+</script>
 
 {% endblock %}
 

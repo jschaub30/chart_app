@@ -1,6 +1,6 @@
 var margin = {top: 20, right: 120, bottom: 20, left: 120},
     width = 1400 - margin.right - margin.left,
-    height = 1000 - margin.top - margin.bottom;
+    height = 800 - margin.top - margin.bottom;
     
 var i = 0,
     duration = 750,
@@ -54,7 +54,7 @@ d3.json(json_file, function(error, flare) {
   root.y0 = 0;
 
 
-  if (typeof lookup_email !== 'undefined'){
+  if ( lookup_email ){
     console.log(lookup_email);  // Don't collapse root
   } else {
     root.children.forEach(collapse);
@@ -134,6 +134,7 @@ function update(source) {
     tooltip.style("background", "#e3e3e3")
     html_str = d["name"] + '<br />';
     html_str += d["job_responsibility"] + '<br />';
+    html_str += d["email"] + '<br />';
 
     if (d["is_manager"]){
       html_str = html_str + d["full_count"] + '(full-time) and ' + d["supp_count"] + ' (supplemental) reports<br />';
@@ -153,7 +154,7 @@ function update(source) {
   nodeUpdate.select("circle")
       .attr("r", function(d){
         // Apply special formatting to person being looked up
-        if (typeof lookup_email !== 'undefined'){
+        if ( lookup_email ){
           if (d['email'].toLowerCase()==lookup_email.toLowerCase()){
             return 15;
           }
@@ -167,7 +168,7 @@ function update(source) {
       //.style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
       .style("fill", function(d){
         // Apply special formatting to person being looked up
-        if (typeof lookup_email !== 'undefined'){
+        if ( lookup_email ){
           if (d['email'].toLowerCase()==lookup_email.toLowerCase()){
             return "#FEE529"
           }
