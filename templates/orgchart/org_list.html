@@ -1,17 +1,17 @@
 {% extends 'orgchart/base.html' %}
 {% block content %}
 
-<div class="org_list">
-  <h1> IBM Organizations </h1>
-  <div class="row">
-    <div class="col-md-6">
-      <ul class="list-group">
+<div>
+  <div>
+    <h1 class="textcenter"> IBM Organizations </h1>
+      <table>
         {% for org in object_list %}
-        <li class="list-group-item">
-          <a href="{% url 'horizontal_tree' org.slug %}">{{ org }}</a></li>
+        <tr>
+          <td><a href="{% url 'horizontal_tree' org.slug %}">{{ org }}</a></td>
+          <td><a href="{% url 'horizontal_tree' org.slug %}">{{ org.root_name }}</a></td>
+        </tr>
         {% endfor %}
-      </ul>
-    </div>
+      </table>
   </div>
 </div>
 	

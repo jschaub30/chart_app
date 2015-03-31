@@ -17,6 +17,11 @@
 
 <div id="orgchart_header"> <h1>{{ object.title }}</h1></div>
 
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+</form>
 <div id='chart'>
 </div>
 

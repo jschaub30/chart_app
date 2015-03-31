@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.shortcuts import redirect
 from .models import Org
+from .forms import LookupForm
 import json
 
 class OrgList(ListView):
@@ -11,6 +12,10 @@ class OrgList(ListView):
     def get_context_data(self, **kwargs):
         context = super(OrgList, self).get_context_data(**kwargs)
         context['object_list'] = context['object_list'].order_by('title')
+        orgs = Org.objects.all().order_by('title')
+        for k in range(len(orgs)):
+            orgs[k].root_name = orgs[k].json_file.url.strip('/media/latest').replace('.json', '').replace('_', ' ')
+        context['object_list'] = orgs
         return context
 
 class OrgChart(DetailView):
@@ -23,7 +28,14 @@ class OrgChart(DetailView):
             context['lookup_email'] = email
         except:
             pass
+        context['form'] = LookupForm()
         return context
+    def post(self, request, *args, **kwargs):
+        form = LookupForm(request.POST)
+        print form
+        email = form.data['email']
+        return lookup_email(request, email)
+
 
 class RadialTreeChart(DetailView):
     model = Org

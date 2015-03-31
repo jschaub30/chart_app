@@ -30,6 +30,7 @@ body {
     min-height: 2000px;
     padding-top: 0px;
 }
+
   
 h1 {
     font-size: 64px;
@@ -189,10 +190,14 @@ li.title  a {
   text-align: center;
 }
 
+.textcenter {
+  text-align: center;
+}
+
 .org_list ul {
     list-style: none;
 }
 
-.org_list li {
-    width: 100%;;
+table {
+  margin: auto;
 }

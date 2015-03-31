@@ -34,7 +34,7 @@ legend.append('text')
   .attr('y', 20)
   .style('font-size','12px');
 legend.append('text')
-  .text('Right click to toggle all levels')
+  .text('Right click to toggle 2 levels')
   .attr('x', -75)
   .attr('y', 40)
   .style('font-size','12px');
@@ -73,12 +73,21 @@ function collapse(d) {
   }
 }
 
+var depth = 0;
+
 function expand(d) {
+  // console.log(d.name);
+  // console.log(depth);
+  if (depth < 2){
   if (d._children) {
-    d.children = d._children;
+    depth = depth + 1;
+    d.children  = d._children;
     d.children.forEach(expand);
+    depth = depth - 1;
     d._children = null;
   }
+}
+    
 }
 
 function update(source) {
@@ -108,6 +117,7 @@ function update(source) {
            d3.event.preventDefault();
            // console.log(d);
            if (d._children) {
+             // console.log("Depth is " + d.depth);
              expand(d);
            } else {
              collapse(d);
@@ -173,6 +183,9 @@ function update(source) {
             return "#FEE529"
           }
         }
+        if(d["is_manager"]){
+          return "#216C2A";  // Money green
+        }
         if (d["is_full_time"]){
           return "#466BB0" // IBM Blue
         }
@@ -233,7 +246,10 @@ function update(source) {
 
 // Toggle children on click.
 function click(d) {
-  if (d.children) {
+  if (d3.event.shiftKey) {
+      console.log("Mouse+Shift pressed");
+  }
+    if (d.children) {
     d._children = d.children;
     d.children = null;
   } else {
