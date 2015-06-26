@@ -56,6 +56,7 @@ d3.json(json_file, function(error, flare) {
 
   if ( lookup_email ){
     console.log(lookup_email);  // Don't collapse root
+    lookup_email <- false
   } else {
     root.children.forEach(collapse);
   //root.children.forEach(expand);

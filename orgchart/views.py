@@ -52,6 +52,8 @@ def lookup_email(request, email):
     slug = 'Research'
     if email in org_lookup:
         slug = org_lookup[email]
+        print email
+        print slug
     return redirect('horizontal_tree', slug=slug, email=email)
     
 def lookup_org():
